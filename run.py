@@ -16,7 +16,7 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-cur = conn.cursor()
+
 
 @app.route("/", methods=['POST'])
 def get_text_body():
@@ -24,8 +24,10 @@ def get_text_body():
     body = request.values.get('Body', None)
     print body
     # write message to the DB
+    cur = conn.cursor()
     try:
         cur.execute("INSERT INTO bigf.texts (message) VALUES (%s)", [body])
+        conn.commit()
     except Exception as e:
         print e
     return str(body)
