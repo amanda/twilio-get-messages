@@ -35,12 +35,20 @@ def get_text_body():
 @app.route("/raw", methods=['GET'])
 def get_raw_file():
     """route to get raw text for sending to the voicebox"""
+    # select all from DB
+    # return raw
     pass
 
 @app.route("/messages", methods=['GET'])
 def get_messages():
     """route to display messages in a pretty way for the audience"""
-    pass
+    # get all the messages
+    cur = conn.cursor()
+    cur.execute("SELECT * from bigf.texts")
+    records = cur.fetchall()
+    print records
+    # return render_template("messages.html", messages=records)
+    return records
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
