@@ -18,13 +18,16 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['POST'])
 def get_text_body():
     """route that the twilio api POSTs to with text messages"""
     body = request.values.get('Body', None)
     print body
     # write message to the DB
-    cur.execute("INSERT INTO bigf.texts (message) VALUES %s", body)
+    try:
+        cur.execute("INSERT INTO bigf.texts (message) VALUES (%s)", [body])
+    except Exception as e:
+        print e
     return str(body)
 
 @app.route("/raw", methods=['GET'])
