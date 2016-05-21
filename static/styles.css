@@ -4,3 +4,7 @@ body {
     font-size: 20pt;
     font-family: monospace;
 }
+
+div.message {
+   margin: 20px 15px;
+}

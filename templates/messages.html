@@ -4,14 +4,17 @@
 	{% block head %}
 		<title>the cryptic reef</title>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}"/>
+		<link type="text/javascript" href="{{ url_for('static',filename='messages.js') }}"/>
+		<link type="text/javascript" href="{{ url_for('static',filename='jquery.js') }}"/>
 	{% endblock %}
 </head>
 <body>
   <div class="container">
     <div class="text">
       {% for msg in msgs %}
-          <div>
-            {{ msg }}
+          <div class="message">
+              <span class="prompt">&gt; </span>
+              <span class="text_body">{{ msg }}</span>
           </div>
       {% endfor %}
     </div>
