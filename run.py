@@ -40,14 +40,14 @@ def raw_file():
     cur.execute("SELECT texts.message FROM bigf.texts")
     records = [r[0] + '.' for r in cur.fetchall()]
     print records
-    return render_template('messages.html', msgs=records)
+    return render_template('raw.html', msgs=records)
 
 @app.route("/messages", methods=['GET'])
 def get_messages():
     """route to display messages in a pretty way for the audience"""
     cur = conn.cursor()
     cur.execute("SELECT texts.message FROM bigf.texts")
-    records = [r[0] + '\n' for r in cur.fetchall()]
+    records = [r[0] for r in cur.fetchall()]
     return render_template('messages.html', msgs=records)
 
 if __name__ == "__main__":
