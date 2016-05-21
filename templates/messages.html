@@ -1,8 +1,18 @@
-{% extends layout.html %}
-<div class="container">
-  <div class="text">
-    {% if msg %}
-      {{ msg }}
-    { %endif }
+<!DOCTYPE html>
+<html>
+<head>
+	{% block head %}
+		<title>the cryptic reef</title>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}"/>
+	{% endblock %}
+</head>
+<body>
+  <div class="container">
+    <div class="text">
+      {% for msg in msgs %}
+        {{ msg }}
+      {% endfor %}
+    </div>
   </div>
-</div>
+</body>
+</html>

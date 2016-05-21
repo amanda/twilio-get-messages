@@ -6,7 +6,7 @@ import cgi
 
 app = Flask(__name__)
 
-# global postgres stuff
+# global postgres stuff eep
 urlparse.uses_netloc.append("postgres")
 url = urlparse.urlparse(os.environ["DATABASE_URL"])
 conn = psycopg2.connect(
@@ -18,7 +18,7 @@ conn = psycopg2.connect(
 )
 
 
-@app.route("/", methods=['POST'])
+@app.route('/', methods=['POST'])
 def get_text_body():
     """route that the twilio api POSTs to with text messages"""
     body = request.values.get('Body', None)
@@ -32,24 +32,24 @@ def get_text_body():
         print e
     return str(body)
 
-@app.route("/raw", methods=['GET'])
-def get_raw_file():
+@app.route('/raw', methods=['GET'])
+def raw_file():
     """route to get raw text for sending to the voicebox"""
-    # select all from DB
-    # return raw
-    pass
+    # select all from DB, return raw period-separated text to curl
+    cur = conn.cursor()
+    cur.execute("SELECT texts.message FROM bigf.texts")
+    records = [r[0] + '.' for r in cur.fetchall()]
+    print records
+    return render_template('messages.html', msgs=records)
 
 @app.route("/messages", methods=['GET'])
 def get_messages():
     """route to display messages in a pretty way for the audience"""
-    # get all the messages
     cur = conn.cursor()
-    cur.execute("SELECT * from bigf.texts")
-    records = cur.fetchall()
-    print records
-    # return render_template("messages.html", messages=records)
-    return records
+    cur.execute("SELECT texts.message FROM bigf.texts")
+    records = [r[0] + '\n' for r in cur.fetchall()]
+    return render_template('messages.html', msgs=records)
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)
