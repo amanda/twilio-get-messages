@@ -38,7 +38,7 @@ def raw_file():
     # select all from DB, return raw period-separated text to curl
     cur = conn.cursor()
     cur.execute("SELECT texts.message FROM bigf.texts")
-    records = [r[0] + '.' for r in cur.fetchall()]
+    records = ' '.join([r[0] + '.' for r in cur.fetchall()])
     print records
     return records
 
