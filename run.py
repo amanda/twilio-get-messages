@@ -8,7 +8,9 @@ app = Flask(__name__)
 
 # global postgres stuff eep
 urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
+# url = urlparse.urlparse(os.environ["DATABASE_URL"])
+db = "postgres://bgitqsybkvuysr:U11QqcNq97-d5DUf76LNFlITfZ@ec2-54-243-52-209.compute-1.amazonaws.com:5432/d4f0jo89c9bn78"
+url = urlparse.urlparse(db)
 conn = psycopg2.connect(
     database=url.path[1:],
     user=url.username,
@@ -32,22 +34,33 @@ def get_text_body():
         print e
     return str(body)
 
-@app.route('/raw', methods=['GET'])
-def raw_file():
+
+@app.route('/raw', methods=['GET'], defaults={'timestamp': None})
+@app.route('/raw/<timestamp>', methods=['GET'])
+def raw_file(timestamp=None):
     """route to get raw text for sending to the voicebox"""
     # select all from DB, return raw period-separated text to curl
     cur = conn.cursor()
-    cur.execute("SELECT texts.message FROM bigf.texts")
-    records = ' '.join([r[0] + '.' for r in cur.fetchall()])
+    if timestamp:
+        cur.execute("SELECT texts.message FROM bigf.texts WHERE texts.create_time > to_timestamp(%s)", [timestamp])
+        records = ' '.join([r[0] + '.' for r in cur.fetchall()])
+    else:
+        cur.execute("SELECT texts.message FROM bigf.texts")
+        records = ' '.join([r[0] + '.' for r in cur.fetchall()])
     print records
     return records
 
-@app.route("/messages", methods=['GET'])
-def get_messages():
+@app.route("/messages", methods=['GET'], defaults={'timestamp': None})
+@app.route("/messages/<timestamp>", methods=['GET'])
+def get_messages(timestamp=None):
     """route to display messages in a pretty way for the audience"""
     cur = conn.cursor()
-    cur.execute("SELECT texts.message FROM bigf.texts")
-    records = [r[0] for r in cur.fetchall()]
+    if timestamp:
+        cur.execute("SELECT texts.message FROM bigf.texts WHERE texts.create_time > to_timestamp(%s)", [timestamp])
+        records = [r[0] for r in cur.fetchall()]
+    else:
+        cur.execute("SELECT texts.message FROM bigf.texts")
+        records = [r[0] for r in cur.fetchall()]
     print records
     return render_template('messages.html', msgs=records)
 
