@@ -4,8 +4,8 @@
 	{% block head %}
 		<title>the cryptic reef</title>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}"/>
-		<link type="text/javascript" href="{{ url_for('static',filename='messages.js') }}"/>
-		<link type="text/javascript" href="{{ url_for('static',filename='jquery.js') }}"/>
+        <script type="text/javascript" src="{{ url_for('static',filename='jquery-2.2.4.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='messages.js') }}"></script>
 	{% endblock %}
 </head>
 <body>

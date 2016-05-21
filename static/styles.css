@@ -8,3 +8,7 @@ body {
 div.message {
    margin: 20px 15px;
 }
+
+.dark {
+    color: black;
+}

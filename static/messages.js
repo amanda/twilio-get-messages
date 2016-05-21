@@ -1,3 +1,10 @@
 $( document ).ready(function() {
-    console.log("hi amanda");
+
+    setInterval(function() {
+        $('.prompt').addClass("dark");
+        setTimeout(function() {
+            $('.prompt').removeClass("dark");
+        }, 500);
+    }, 1000);
+
 });
