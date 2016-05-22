@@ -27,7 +27,8 @@ def get_text_body():
     # write message to the DB
     cur = conn.cursor()
     try:
-        cur.execute("INSERT INTO bigf.texts (message, create_time) VALUES (%s, to_timestamp(%s))", [body, int(time.time())])
+        epoch_ms_precision = float(int(time.time() * 1000)) / 1000;
+        cur.execute("INSERT INTO bigf.texts (message, create_time) VALUES (%s, to_timestamp(%s))", [body, epoch_ms_precision]);
         conn.commit()
     except Exception as e:
         print e
