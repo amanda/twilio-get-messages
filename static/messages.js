@@ -8,7 +8,8 @@ $( document ).ready(function() {
     }, 1000);
 
     var interval = 1;
-    var time = (Date.now() / 1000) - interval;
+    // leaving a 30s grace period because the db can be laggy :(
+    var time = (Date.now() / 1000) - (interval * 30);
     setInterval(function() {
         time += interval;
         $.ajax({
@@ -25,9 +26,11 @@ $( document ).ready(function() {
         if (i < text.length) {
             text_container.append(text[i]);
 
+            // random delay but make sure all text can be typed within the interval
+            var delay = (Math.random() * ((interval * 1000) / text.length));
             setTimeout(function() {
                 typeOut(i + 1, text)
-            }, (Math.random() * ((interval * 1000) / text.length)));
+            }, delay);
         }
     }
 
