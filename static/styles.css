@@ -6,7 +6,16 @@ body {
 #header {
     margin: 0px;
     font-size: 9pt;
+}
+
+#header pre {
     white-space: pre-wrap;
+}
+
+#info {
+    font-weight: bold;
+    font-size: 12pt;
+    float: right;
 }
 
 #text {
