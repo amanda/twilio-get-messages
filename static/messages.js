@@ -10,7 +10,7 @@ $( document ).ready(function() {
     var interval = 1;
     var text_container = $("#text");
     // leaving a grace period because the db can be laggy :(
-    var time = (Date.now() / 1000) - (interval * 2);
+    var time = (Date.now() / 1000) - (interval * 15);
     setInterval(function() {
         time += interval;
         var url = "http://" + document.location.host + "/raw/" + time + "/" + (time + interval);

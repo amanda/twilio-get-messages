@@ -8,14 +8,14 @@ body {
     font-size: 9pt;
 }
 
-#header pre {
-    white-space: pre-wrap;
+#header .metadata {
+    color: yellowgreen;
 }
 
 #info {
     font-weight: bold;
     font-size: 12pt;
-    float: right;
+    white-space: nowrap;
 }
 
 #text {
@@ -23,5 +23,5 @@ body {
 }
 
 .dark {
-    color: white;
+    visibility: hidden;
 }
