@@ -7,39 +7,41 @@ $( document ).ready(function() {
         }, 500);
     }, 1000);
 
-    var interval = 1;
-    var text_container = $("#text");
-    // leaving a grace period because the db can be laggy :(
-    var time = (Date.now() / 1000) - (interval * 15);
-    setInterval(function() {
-        time += interval;
-        var url = "http://" + document.location.host + "/raw/" + time + "/" + (time + interval);
+    var interval = 1000; // 1 second
+    function poll(start_time) {
+        var now = (Date.now() / 1000);
+        var url = "http://" + document.location.host + "/raw/" + start_time + "/" + now;
 
         $.ajax({
             url: url
         }).done(function(data) {
             if (data) {
                 data += ". ";
-                if (data.length < 100) {
-                    typeOut(0, data);
-                } else {
-                    // hundreds of element appends per second are apparently too much
-                    text_container.append(data);
-                }
+                typeOut(0, data, now);
+            } else {
+                // wait an interval before re-polling
+                setTimeout(function() {
+                    poll(now);
+                }, interval);
             }
         });
-    }, (interval * 1000));
+    };
 
-    function typeOut(i, text) {
+    var text_container = $("#text");
+    function typeOut(i, text, start_time) {
         if (i < text.length) {
             text_container.append(text[i]);
 
-            // random delay but make sure all text can be typed within the interval
-            var delay = (Math.random() * ((interval * 100) / text.length));
+            // random delay but try to fit it into the length of an interval
+            var delay = (Math.random() * (interval / text.length));
             setTimeout(function() {
-                typeOut(i + 1, text)
+                typeOut(i + 1, text, start_time)
             }, delay);
+        } else {
+            poll(start_time);
         }
     }
+
+    poll(Date.now() / 1000);
 
 });
