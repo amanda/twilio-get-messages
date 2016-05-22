@@ -1,14 +1,18 @@
 body {
-    background-color: black;
-    color: #ADFF2F;
-    font-size: 20pt;
     font-family: monospace;
+    font-size: 20pt;
 }
 
-div.message {
-   margin: 20px 15px;
+#header {
+    margin: 0px;
+    font-size: 9pt;
+    white-space: pre-wrap;
+}
+
+div.text {
+    margin: 0px 5px;
 }
 
 .dark {
-    color: black;
+    color: white;
 }
