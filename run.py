@@ -3,6 +3,7 @@ import os
 import psycopg2
 import urlparse
 import cgi
+import time
 
 app = Flask(__name__)
 
@@ -26,7 +27,7 @@ def get_text_body():
     # write message to the DB
     cur = conn.cursor()
     try:
-        cur.execute("INSERT INTO bigf.texts (message) VALUES (%s)", [body])
+        cur.execute("INSERT INTO bigf.texts (message, create_time) VALUES (%s, to_timestamp(%s))", [body, int(time.time())])
         conn.commit()
     except Exception as e:
         print e
