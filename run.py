@@ -32,35 +32,29 @@ def get_text_body():
         print e
     return str(body)
 
-
-@app.route('/raw', methods=['GET'], defaults={'timestamp': None})
-@app.route('/raw/<timestamp>', methods=['GET'])
-def raw_file(timestamp=None):
+@app.route('/raw', methods=['GET'], defaults={'from_time': None, 'to_time': None})
+@app.route('/raw/<from_time>', methods=['GET'])
+@app.route('/raw/<from_time>/<to_time>', methods=['GET'])
+def raw_file(from_time=None, to_time=None):
     """route to get raw text for sending to the voicebox"""
-    # select all from DB, return raw period-separated text to curl
     cur = conn.cursor()
-    if timestamp:
-        cur.execute("SELECT texts.message FROM bigf.texts WHERE texts.create_time > to_timestamp(%s)", [timestamp])
-        records = ' '.join([r[0] + '.' for r in cur.fetchall()])
+    if from_time and to_time:
+        cur.execute("SELECT texts.message FROM bigf.texts WHERE texts.create_time > to_timestamp(%s) AND \
+                texts.create_time < to_timestamp(%s)", [from_time, to_time])
+    elif from_time:
+        cur.execute("SELECT texts.message FROM bigf.texts WHERE texts.create_time > to_timestamp(%s)", [from_time])
     else:
         cur.execute("SELECT texts.message FROM bigf.texts")
-        records = ' '.join([r[0] + '.' for r in cur.fetchall()])
-    print records
-    return records
 
-@app.route("/messages", methods=['GET'], defaults={'timestamp': None})
-@app.route("/messages/<timestamp>", methods=['GET'])
-def get_messages(timestamp=None):
+    records = [r[0] for r in cur.fetchall()]
+    output = '. '.join(records)
+    print output
+    return output
+
+@app.route("/messages/", methods=['GET'])
+def get_messages():
     """route to display messages in a pretty way for the audience"""
-    cur = conn.cursor()
-    if timestamp:
-        cur.execute("SELECT texts.message FROM bigf.texts WHERE texts.create_time > to_timestamp(%s)", [timestamp])
-        records = [r[0] for r in cur.fetchall()]
-    else:
-        cur.execute("SELECT texts.message FROM bigf.texts")
-        records = [r[0] for r in cur.fetchall()]
-    print records
-    return render_template('messages.html', msgs=records)
+    return render_template('messages.html')
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
