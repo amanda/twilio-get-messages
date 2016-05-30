@@ -1,25 +1,15 @@
+html, body, div, pre, p {
+    margin: 0px 2px;
+}
+
 body {
     font-family: monospace;
-    font-size: 20pt;
-}
-
-#header {
-    margin: 0px;
-    font-size: 9pt;
-}
-
-#header .metadata {
-    color: yellowgreen;
+    font-size: 15pt;
 }
 
 #info {
+    padding: 15px 0px;
     font-weight: bold;
-    font-size: 12pt;
-    white-space: nowrap;
-}
-
-#text {
-    margin: 0px 5px;
 }
 
 .dark {
